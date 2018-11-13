@@ -24,19 +24,21 @@ class RandomImageDataset(Dataset):
 
     def __getitem__(self, index):
 
-        # TODO: Create a random image tensor and return it.
-        # Bonus if you make sure to always return the same image for the
-        # same index (make it deterministic per index), but don't mess-up
-        # RNG state outside this method.
+        if index < 0 or index >= self.num_samples:
+            raise IndexError(f'Out of bound index: {index}')
 
-        # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
+        old_seed = torch.initial_seed()
+        torch.manual_seed(index)
+
+        random_image = torch.randint(0, 256, self.image_dim, dtype=torch.uint8)
+        random_label = torch.randint(0, self.num_classes, (1,), dtype=torch.long).item()
+
+        torch.manual_seed(old_seed)
+
+        return random_image, random_label
 
     def __len__(self):
-        # ====== YOUR CODE: ======
-        raise NotImplementedError()
-        # ========================
+        return self.num_samples
 
 
 class SubsetDataset(Dataset):
@@ -58,15 +60,15 @@ class SubsetDataset(Dataset):
         self.offset = offset
 
     def __getitem__(self, index):
-        # TODO: Return the item at index + offset from the source dataset.
-        # Make sure to raise an IndexError if index is out of bounds.
-
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        if index < 0 or index >= self.subset_len:
+            raise IndexError(f'Invalid index: {index}')
+
+        return self.source_dataset[self.offset+index]
         # ========================
 
     def __len__(self):
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        return self.subset_len
         # ========================
 
