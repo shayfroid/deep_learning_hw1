@@ -80,7 +80,7 @@ class KNNClassifier(object):
 
         dists = torch.tensor([])
         # ====== YOUR CODE: ======
-        raise NotImplementedError()
+        test_repeat = x_test.repea
         # ========================
 
         return dists
