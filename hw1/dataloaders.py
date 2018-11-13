@@ -31,15 +31,15 @@ def create_train_validation_loaders(dataset: Dataset, validation_ratio,
     # ====== YOUR CODE: ======
     validation_set_size = int(validation_ratio * len(dataset))
     # train_set_size = len(dataset) - validation_set_size\
-
+    shuffled_indices = torch.randperm(len(dataset))
     # train_indices = range(0, train_set_size)
-    validation_subset_indices = range(0, validation_set_size)
+    validation_subset_indices = shuffled_indices[0:validation_set_size]
     validation_sampler = sampler.SubsetRandomSampler(validation_subset_indices)
     dl_valid = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
                                            sampler=validation_sampler,
                                            num_workers=num_workers)
 
-    train_subset_indices = range(validation_set_size, len(dataset))
+    train_subset_indices = shuffled_indices[validation_set_size:len(dataset)]
     train_sampler = sampler.SubsetRandomSampler(train_subset_indices)
     dl_train = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
                                            sampler=train_sampler,
